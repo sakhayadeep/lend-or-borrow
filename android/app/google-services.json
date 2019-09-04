@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "401906497110",
+    "firebase_url": "https://lend-or-borrow-tinytusk.firebaseio.com",
+    "project_id": "lend-or-borrow-tinytusk",
+    "storage_bucket": "lend-or-borrow-tinytusk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401906497110:android:499b7bda64ace75813edf7",
+        "android_client_info": {
+          "package_name": "com.tinytusk.lend_or_borrow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401906497110-qd3jjq8uojosueck0l2u5p52nmaiol84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDo-gHw_eP1A66lt4_gl4QZtBfoWIOu5OQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401906497110-qd3jjq8uojosueck0l2u5p52nmaiol84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
