@@ -22,20 +22,24 @@ class _MyHomePageState extends State<MyHomePage> {
     return showDialog(context: context, builder: (context){
       return AlertDialog(
         title: Text("Add new entry..."),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
+        content: ListView(
+          shrinkWrap: true,
           children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Name",
+            ListTile(
+                          leading: TextField(
+                decoration: InputDecoration(
+                  labelText: "Name",
+                ),
+                controller: nameController,
               ),
-              controller: nameController,
             ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Amount",
+            ListTile(
+                          leading: TextField(
+                decoration: InputDecoration(
+                  labelText: "Amount",
+                ),
+                controller: amountController,
               ),
-              controller: amountController,
             ),
           ],
         ),
@@ -205,14 +209,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget getListView(){
   var listView = ListView.builder(
+        //separatorBuilder: (context, index) => Divider(color: Colors.black),
         itemCount: userNames.length,
         itemBuilder: (context, index){
-          return ListTile(
+          return Card(
+            child:ListTile(
             title: Text(userNames[index]),
-            trailing: Text(users[userNames[index]].toString()),
+            trailing: Text(users[userNames[index]].toString(),style: TextStyle(color: users[userNames[index]]>0 ? Colors.green : Colors.redAccent),),
             onTap: ()=>updateUserPopupDialog(context, userNames[index]),
             onLongPress: ()=>deleteUserPopupDialog(context, userNames[index]),
-          );
+          ),);
         },);
 
     return listView;
