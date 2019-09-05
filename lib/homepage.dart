@@ -10,7 +10,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final scaffoldKey = new GlobalKey<ScaffoldState>();
+
+
   Map<String, double> users = Map();
   List<String> userNames = List();
 
@@ -121,12 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       );
     });
-
   }
 
   deleteUserPopupDialog(BuildContext context, String name){
-
-    
     return showDialog(context: context, builder: (context){
       return AlertDialog(
         title: Text("Delete?"),
@@ -161,6 +159,8 @@ class _MyHomePageState extends State<MyHomePage> {
           users[name] = amount;
           userNames.add(name);
         }); 
+      }else{
+        updateAmount(name, amount);
       }
     }
     catch(e){
@@ -209,15 +209,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget getListView(){
   var listView = ListView.builder(
-        //separatorBuilder: (context, index) => Divider(color: Colors.black),
         itemCount: userNames.length,
         itemBuilder: (context, index){
           return Card(
             child:ListTile(
             title: Text(userNames[index]),
-            trailing: Text(users[userNames[index]].toString(),style: TextStyle(color: users[userNames[index]]>0 ? Colors.green : Colors.redAccent),),
-            onTap: ()=>updateUserPopupDialog(context, userNames[index]),
-            onLongPress: ()=>deleteUserPopupDialog(context, userNames[index]),
+            trailing: Text(
+              users[userNames[index]].toString(),
+              style: TextStyle(color: users[userNames[index]] > 0 ? Colors.green : users[userNames[index]] == 0 ? Colors.yellowAccent : Colors.redAccent),
+              ),
+            onTap: () => updateUserPopupDialog(context, userNames[index]),
+            onLongPress: () => deleteUserPopupDialog(context, userNames[index]),
           ),);
         },);
 
