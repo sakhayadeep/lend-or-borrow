@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -14,6 +15,44 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Map<String, double> users = Map();
   List<String> userNames = List();
+
+  _readSavedUserData() async {
+        final prefs = await SharedPreferences.getInstance();
+        
+        final userDataKeys = prefs.getKeys()??new List();
+
+      setState(() {
+        for(var key in userDataKeys)
+        {
+          userNames.add(key);
+          users[key] = prefs.getDouble(key);
+        }
+      });
+      }
+
+  _saveUserData() async {
+        final prefs = await SharedPreferences.getInstance();
+        String nKey;
+        double nValue;
+        users.forEach((name, amount){
+          nKey = name;
+          nValue = amount;
+          prefs.setDouble(nKey, nValue);
+        });
+        
+      }
+
+  _deleteUserData(String key) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove(key);
+
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    _readSavedUserData();
+  }
 
   createUserPopupDialog(BuildContext context){
 
@@ -166,6 +205,8 @@ class _MyHomePageState extends State<MyHomePage> {
     catch(e){
       print(e.toString());
     }
+
+    _saveUserData();
   }
 
   void deleteUser(String name){
@@ -175,11 +216,13 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         users.remove(name);
         userNames.remove(name);
+        _deleteUserData(name);
       });
     }else{
       print("$name does not exist.");
     }
 
+    _saveUserData();
   }
 
   void updateAmount(String name, double amount){
@@ -191,6 +234,8 @@ class _MyHomePageState extends State<MyHomePage> {
     catch(e){
       print(e);
     }
+
+    _saveUserData();
   }
 
   @override
