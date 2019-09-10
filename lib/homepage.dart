@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -11,7 +12,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
 
   Map<String, double> users = Map();
   List<String> userNames = List();
@@ -240,6 +240,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAdMob.instance.initialize(appId: "").then((response){
+    myBanner..load()..show();
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -261,7 +264,7 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text(userNames[index]),
             trailing: Text(
               users[userNames[index]].toString(),
-              style: TextStyle(color: users[userNames[index]] > 0 ? Colors.green : users[userNames[index]] == 0 ? Colors.yellowAccent : Colors.redAccent),
+              style: TextStyle(color: users[userNames[index]] > 0 ? Colors.green : users[userNames[index]] == 0 ? Colors.black : Colors.redAccent),
               ),
             onTap: () => updateUserPopupDialog(context, userNames[index]),
             onLongPress: () => deleteUserPopupDialog(context, userNames[index]),
@@ -270,4 +273,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return listView;
   }
+
+  static MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  keywords: <String>['games', 'pubg'],
+  contentUrl: 'https://flutter.io',
+  childDirected: false,
+  testDevices: <String>[], // Android emulators are considered test devices
+);
+BannerAd myBanner = BannerAd(
+  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+  // https://developers.google.com/admob/android/test-ads
+  // https://developers.google.com/admob/ios/test-ads
+  adUnitId: "",
+  size: AdSize.smartBanner,
+  targetingInfo: targetingInfo,
+  listener: (MobileAdEvent event) {
+    print("BannerAd event is $event");
+  },
+);
+
 }
