@@ -249,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Scrollbar(child: getListView()),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.deepPurple[900],
+          backgroundColor: Colors.blueAccent,
           child: Icon(Icons.add),
           onPressed: ()=>createUserPopupDialog(context),
         ),
@@ -280,7 +280,7 @@ class _MyHomePageState extends State<MyHomePage> {
     shit();
     return listView;
   }
-  void shit(){
+  void ad(){
     myBanner
       ..load()
       ..show(
