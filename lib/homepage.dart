@@ -167,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return showDialog(context: context, builder: (context){
       return AlertDialog(
         title: Text("Delete?"),
-        content: Text("Are you sure you want to delte entry for $name"),
+        content: Text("Are you sure you want to delete entry for $name"),
         actions: <Widget>[
           MaterialButton(
             elevation: 5.0,
