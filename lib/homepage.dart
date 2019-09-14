@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:admob_flutter/admob_flutter.dart';
-
 import 'package:firebase_admob/firebase_admob.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -242,7 +240,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAdMob.instance.initialize(appId: );
+    FirebaseAdMob.instance.initialize(appId: "").then((response){
+      myBanner
+      ..load()
+      ..show(
+        //anchorOffset: 60.0,
+        // Positions the banner ad 10 pixels from the center of the screen to the right
+        //horizontalCenterOffset: 10.0,
+        // Banner Position
+        anchorType: AnchorType.bottom,
+      ); 
+    });
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -277,23 +285,8 @@ class _MyHomePageState extends State<MyHomePage> {
             onLongPress: () => deleteUserPopupDialog(context, userNames[index]),
           ),);
         },);
-    shit();
     return listView;
   }
-  void ad(){
-    myBanner
-      ..load()
-      ..show(
-        //anchorOffset: 60.0,
-        // Positions the banner ad 10 pixels from the center of the screen to the right
-        //horizontalCenterOffset: 10.0,
-        // Banner Position
-        anchorType: AnchorType.bottom,
-      ); 
-  }
-
-  
-
 }
 MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
   keywords: <String>['grocery', 'insurance'],
