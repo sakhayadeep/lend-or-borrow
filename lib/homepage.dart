@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -11,7 +12,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
 
   Map<String, double> users = Map();
   List<String> userNames = List();
@@ -167,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return showDialog(context: context, builder: (context){
       return AlertDialog(
         title: Text("Delete?"),
-        content: Text("Are you sure you want to delte entry for $name"),
+        content: Text("Are you sure you want to delete entry for $name"),
         actions: <Widget>[
           MaterialButton(
             elevation: 5.0,
@@ -240,15 +240,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAdMob.instance.initialize(appId: "").then((response){
+      myBanner
+      ..load()
+      ..show(
+        //anchorOffset: 60.0,
+        // Positions the banner ad 10 pixels from the center of the screen to the right
+        //horizontalCenterOffset: 10.0,
+        // Banner Position
+        anchorType: AnchorType.bottom,
+      ); 
+    });
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Scrollbar(child: getListView()),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blueAccent,
+          child: Icon(Icons.add),
+          onPressed: ()=>createUserPopupDialog(context),
+        ),
+       bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        child: Container(height: 50.0,),
       ),
-      body: getListView(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: ()=>createUserPopupDialog(context),
-         ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -257,17 +274,34 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: userNames.length,
         itemBuilder: (context, index){
           return Card(
+            margin: const EdgeInsets.only(right: 5,bottom: 5,left: 5),
             child:ListTile(
             title: Text(userNames[index]),
             trailing: Text(
               users[userNames[index]].toString(),
-              style: TextStyle(color: users[userNames[index]] > 0 ? Colors.green : users[userNames[index]] == 0 ? Colors.yellowAccent : Colors.redAccent),
+              style: TextStyle(color: users[userNames[index]] > 0 ? Colors.green : users[userNames[index]] == 0 ? Colors.blue : Colors.redAccent),
               ),
             onTap: () => updateUserPopupDialog(context, userNames[index]),
             onLongPress: () => deleteUserPopupDialog(context, userNames[index]),
           ),);
         },);
-
     return listView;
   }
 }
+MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  keywords: <String>['grocery', 'insurance'],
+  contentUrl: 'https://flutter.io',
+  childDirected: false,
+  testDevices: <String>[], // Android emulators are considered test devices
+);
+BannerAd myBanner = BannerAd(
+  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+  // https://developers.google.com/admob/android/test-ads
+  // https://developers.google.com/admob/ios/test-ads
+  adUnitId: BannerAd.testAdUnitId,
+  size: AdSize.smartBanner,
+  targetingInfo: targetingInfo,
+  listener: (MobileAdEvent event) {
+    print("BannerAd event is $event");
+  },
+);
