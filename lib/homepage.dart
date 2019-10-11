@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+//import 'package:path/path.dart';
+//import 'package:sqflite/sqflite.dart';
+
+import './details.dart';
+//import './dataModel.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -244,28 +249,24 @@ class _MyHomePageState extends State<MyHomePage> {
       myBanner
       ..load()
       ..show(
-        //anchorOffset: 60.0,
-        // Positions the banner ad 10 pixels from the center of the screen to the right
-        //horizontalCenterOffset: 10.0,
-        // Banner Position
         anchorType: AnchorType.bottom,
       ); 
     });
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: ()=>createUserPopupDialog(context),
+            ),
+          ],
         ),
         body: Scrollbar(child: getListView()),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blueAccent,
-          child: Icon(Icons.add),
-          onPressed: ()=>createUserPopupDialog(context),
-        ),
        bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         child: Container(height: 50.0,),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -273,23 +274,34 @@ class _MyHomePageState extends State<MyHomePage> {
   var listView = ListView.builder(
         itemCount: userNames.length,
         itemBuilder: (context, index){
+
+          double amount = users[userNames[index]];
+          String name = userNames[index];
+          String statement = "You have " + (amount > 0 ? "given " : "taken ") + (amount > 0 ? amount.toString() : (-amount).toString()) + (amount > 0 ? " to " : " from ") + name;
           return Card(
             margin: const EdgeInsets.only(right: 5,bottom: 5,left: 5),
             child:ListTile(
-            title: Text(userNames[index]),
-            trailing: Text(
-              users[userNames[index]].toString(),
-              style: TextStyle(color: users[userNames[index]] > 0 ? Colors.green : users[userNames[index]] == 0 ? Colors.blue : Colors.redAccent),
+                        
+            title: Text(
+              statement,
+              style: TextStyle(color: amount > 0 ? Colors.green : amount < 0 ? Colors.red : Colors.black),              
               ),
-            onTap: () => updateUserPopupDialog(context, userNames[index]),
-            onLongPress: () => deleteUserPopupDialog(context, userNames[index]),
+
+            onLongPress: () => updateUserPopupDialog(context, name),
+            onTap: ()=>Navigator.push(context,
+                            new MaterialPageRoute(
+                              builder: (context){
+                                return DetailsPage(name: name, statement: statement, deleteFunction: deleteUserPopupDialog,);
+                              }
+                            )
+                          ),
           ),);
         },);
     return listView;
   }
 }
 MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-  keywords: <String>['grocery', 'insurance'],
+  keywords: <String>['money', 'business', 'games', 'pubg'],
   contentUrl: 'https://flutter.io',
   childDirected: false,
   testDevices: <String>[], // Android emulators are considered test devices
@@ -298,7 +310,7 @@ BannerAd myBanner = BannerAd(
   // Replace the testAdUnitId with an ad unit id from the AdMob dash.
   // https://developers.google.com/admob/android/test-ads
   // https://developers.google.com/admob/ios/test-ads
-  adUnitId: BannerAd.testAdUnitId,
+  adUnitId: "",
   size: AdSize.smartBanner,
   targetingInfo: targetingInfo,
   listener: (MobileAdEvent event) {
