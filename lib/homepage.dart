@@ -279,23 +279,23 @@ class _MyHomePageState extends State<MyHomePage> {
           String name = userNames[index];
           String statement = "You have " + (amount > 0 ? "given " : "taken ") + (amount > 0 ? amount.toString() : (-amount).toString()) + (amount > 0 ? " to " : " from ") + name;
           return Card(
-            margin: const EdgeInsets.only(right: 5,bottom: 5,left: 5),
-            child:ListTile(
-                        
-            title: Text(
-              statement,
-              style: TextStyle(color: amount > 0 ? Colors.green : amount < 0 ? Colors.red : Colors.black),              
-              ),
+                margin: const EdgeInsets.only(right: 5,bottom: 5,left: 5),
+                child:ListTile(
+                          
+                  title: Text(
+                    statement,
+                    style: TextStyle(color: amount > 0 ? Colors.green : amount < 0 ? Colors.red : Colors.black),              
+                  ),
 
-            onLongPress: () => updateUserPopupDialog(context, name),
-            onTap: ()=>Navigator.push(context,
-                            new MaterialPageRoute(
-                              builder: (context){
-                                return DetailsPage(name: name, statement: statement, deleteFunction: deleteUserPopupDialog,);
-                              }
-                            )
-                          ),
-          ),);
+                  onLongPress: () => updateUserPopupDialog(context, name),
+                  onTap: ()=>Navigator.push(context,
+                                  new MaterialPageRoute(
+                                    builder: (context){
+                                      return DetailsPage(name: name, statement: statement, editFunction: updateUserPopupDialog, deleteFunction: deleteUserPopupDialog,);
+                                    }
+                                  )
+                                ),
+                ),);
         },);
     return listView;
   }
